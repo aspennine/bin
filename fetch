@@ -1,11 +1,26 @@
 #!/bin/sh
 
-echo "
-    ___     ${USER}@$(hostname)
-   (.. |    os: $(. /etc/os-release; echo "${PRETTY_NAME:-Linux}")
-   (<> |    shell: ${SHELL}
-  / __  \   pkgs: $(ls -1 /var/db/ports | wc -l)
- ( /  \ /|  uptime: $(uptime)
-_/\ __)/_)  memory: $(free -m | awk 'NR==2 {printf "%d/%d", $3, $2}')
-\/_____\/   kernel: $(uname -r)
-" 2>/dev/null
+RESET='\033[0m'
+BOLD='\033[1m'
+CYAN='\033[34m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+
+printf "
+${CYAN}    ___     ${YELLOW}%s${RESET}@${YELLOW}%s${RESET}
+${CYAN}   (${RESET}.. ${CYAN}|    ${YELLOW}os:${RESET} %s
+${CYAN}   (${YELLOW}<> ${CYAN}|    ${YELLOW}shell:${RESET} %s
+${CYAN}  / ${RESET}__ ${CYAN} \\   ${YELLOW}pkgs:${RESET} %s
+${CYAN} ( ${RESET}/  \\ ${CYAN}/|  ${YELLOW}uptime:${RESET} %s
+${CYAN}_/\\ ${RESET}__)${CYAN}/_)  ${YELLOW}memory:${RESET} %s
+${CYAN}\\/_____\\/   ${YELLOW}kernel:${RESET} %s
+${RESET}
+" \
+"$USER" \
+"$(hostname)" \
+"$(. /etc/os-release; printf '%s' "${PRETTY_NAME:-Linux}")" \
+"$SHELL" \
+"$(ls -1 /var/db/ports 2>/dev/null | wc -l)" \
+"$(awk '{printf "%d", $1/60}' /proc/uptime)" \
+"$(free -m | awk 'NR==2 {printf "%d/%d", $3, $2}')" \
+"$(uname -r)"
