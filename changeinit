@@ -1,0 +1,27 @@
+#!/bin/sh
+
+LINK="/sbin/init"
+
+printf "new path: "
+read TARGET
+
+# basic sanity checks
+if [ -z "$TARGET" ]; then
+    echo "no path provided"
+    exit 1
+fi
+
+if [ ! -e "$TARGET" ]; then
+    echo "target does not exist: $TARGET"
+    exit 1
+fi
+
+# remove existing link or file
+if [ -e "$LINK" ] || [ -L "$LINK" ]; then
+    rm -f "$LINK"
+fi
+
+# create new symlink
+ln -s "$TARGET" "$LINK" || exit 1
+
+echo "$LINK now symlinked to $TARGET"
