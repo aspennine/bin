@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "
+    ___     ${USER}@$(hostname)
+   (.. |    os: $(. /etc/os-release; echo "${PRETTY_NAME:-Linux}")
+   (<> |    shell: ${SHELL}
+  / __  \   pkgs: $(ls -1 /var/db/ports | wc -l)
+ ( /  \ /|  uptime: $(uptime)
+_/\ __)/_)  memory: $(free -m | awk 'NR==2 {printf "%d/%d", $3, $2}')
+\/_____\/   kernel: $(uname -r)
+" 2>/dev/null
